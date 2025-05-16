@@ -1,0 +1,108 @@
+<style>
+    .colorbar-container {
+      position: fixed;
+      bottom: 15px;
+      left: 55%;
+      transform: translateX(-10%);
+      width: 400px;
+      height: 50px;
+      z-index: 1000;
+      font-family: Arial, sans-serif;
+      font-size: 16px;
+      color: black;
+      text-align: center;
+    }
+  
+    .colorbar-labels {
+      display: flex;
+      justify-content: space-between;
+      padding: 0 5px;
+      margin-bottom: 4px;
+    }
+  
+    .colorbar {
+      display: flex;
+      align-items: center;
+      position: relative;
+      height: 12px;
+    }
+  
+    .triangle-left, .triangle-right {
+      width: 0;
+      height: 0;
+      position: relative;
+    }
+  
+    .triangle-left {
+      border-top: 6px solid transparent;
+      border-bottom: 6px solid transparent;
+      border-right: 10px solid #ea796c;
+    }
+  
+    .triangle-right {
+      border-top: 6px solid transparent;
+      border-bottom: 6px solid transparent;
+      border-left: 10px solid #53ba76;
+    }
+  
+    .triangle-left::before, .triangle-left::after,
+    .triangle-right::before, .triangle-right::after {
+      content: "";
+      position: absolute;
+      width: 1px;
+      height: 12px;
+      background: black;
+    }
+  
+    .triangle-left::before {
+      top: 0;
+      left: 0;
+      transform-origin: top left;
+      transform: rotate(-60deg);
+    }
+  
+    .triangle-left::after {
+      bottom: 0;
+      left: 0;
+      transform-origin: bottom left;
+      transform: rotate(60deg);
+    }
+  
+    .triangle-right::before {
+      top: 0;
+      right: 0;
+      transform-origin: top right;
+      transform: rotate(60deg);
+    }
+  
+    .triangle-right::after {
+      bottom: 0;
+      right: 0;
+      transform-origin: bottom right;
+      transform: rotate(-60deg);
+    }
+  
+    .gradient-bar {
+      flex-grow: 1;
+      height: 12px;
+      background: linear-gradient(to right, 
+        #ea796c, #fca87e, #feecb3, #eff4b3, #cae291, #53ba76);
+      border-top: 1px solid black;
+      border-bottom: 1px solid black;
+    }
+  </style>
+  
+  <div class="colorbar-container">
+    <div class="colorbar-labels">
+      <span>30%</span>
+      <span>40%</span>
+      <span>50%</span>
+      <span>60%</span>
+      <span>70%</span>
+    </div>
+    <div class="colorbar">
+      <div class="triangle-left"></div>
+      <div class="gradient-bar"></div>
+      <div class="triangle-right"></div>
+    </div>
+  </div>
