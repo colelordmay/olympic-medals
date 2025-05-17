@@ -13,7 +13,14 @@ with open("map_code/colorbar.html") as f:
 with open("data/ne_50m_admin_0_countries.geojson", "r", encoding="utf-8") as f:
     countries_json = json.load(f)
 
-# Map update
+### On button press
+def make_on_season_change(map_output, update_fn):
+    def on_season_change(change):
+        if change['name'] == 'value' and change['new']:
+            update_fn(change['new'], map_output)
+    return on_season_change
+
+### Map update
 def update_map_from_choice(season,map_output):
     medal_ratios_df = update_medal_ratios(season=season)
     ratio_dict = dict(zip(medal_ratios_df["Country"], medal_ratios_df["Ratio"]))
