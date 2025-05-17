@@ -1,0 +1,12 @@
+numpy
+pandas
+branca
+ipywidgets
+IPython
+pickle
+json
+jinja2
+autoscraper
+pdfplubmer
+re
+voila
