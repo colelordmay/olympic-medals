@@ -4,5 +4,4 @@ branca
 ipywidgets
 jinja2
 autoscraper
-pdfplubmer
 voila
