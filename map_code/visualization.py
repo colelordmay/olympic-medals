@@ -1,16 +1,20 @@
 import folium
 import numpy as np
+import json
 from IPython.display import clear_output, display
 from map_code.map_style import HatchPattern, OceanBackground
 from map_code.process_update import update_medal_ratios
-from map_code.config import colormap, countries_json
+from map_code.config import colormap
 from map_code.layout import map_output
 
-with open("colorbar.html") as f:
+with open("map_code/colorbar.html") as f:
     colorbar_html = f.read()
 
-# Map update function
-def update_map_from_choice(season):
+with open("data/ne_50m_admin_0_countries.geojson", "r", encoding="utf-8") as f:
+    countries_json = json.load(f)
+
+# Map update
+def update_map_from_choice(season,map_output):
     medal_ratios_df = update_medal_ratios(season=season)
     ratio_dict = dict(zip(medal_ratios_df["Country"], medal_ratios_df["Ratio"]))
     count_dict = dict(zip(medal_ratios_df["Country"], medal_ratios_df["TotalMedals"]))
@@ -54,6 +58,7 @@ def update_map_from_choice(season):
         ),
     )
 
+    # Prepare GeoJSON and inject tooltips
     geojson = folium.GeoJson(
         countries_json,
         style_function=style_function,
@@ -69,28 +74,24 @@ def update_map_from_choice(season):
     for feature in geojson.data["features"]:
         feature["properties"]["tooltip_text"] = tooltip_function(feature)
 
+    # Create the base map
     m = folium.Map(location=(30, 10), zoom_start=2, tiles=None)
 
+    # Add the SVG pattern and background
     m.get_root().add_child(HatchPattern())
     m.get_root().html.add_child(folium.Element(colorbar_html))
-
-    folium.raster_layers.TileLayer(
-        tiles="",
-        name="Background",
-        attr="Dummy",
-        overlay=True,
-        control=False
-    ).add_to(m)
-
+    folium.raster_layers.TileLayer(tiles="", name="Background", attr="Dummy", overlay=True, control=False).add_to(m)
     m.get_root().add_child(OceanBackground("#EEF6FF"))
 
+    # Add the actual data layer
     geojson.add_to(m)
 
-    m.render()
-    m.get_root().script = folium.Element(
-        m.get_root().script.render().replace("topright", "bottomright")
-    )
+    # (Optional) Move control if needed – but this can be skipped in Jupyter
+    # m.get_root().script = folium.Element(
+    #     m.get_root().script.render().replace("topright", "bottomright")
+    # )
 
+    # Final display
     with map_output:
         clear_output(wait=True)
         display(m)

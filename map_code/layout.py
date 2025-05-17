@@ -4,9 +4,10 @@ import ipywidgets as widgets
 map_output = widgets.Output()
 
 season_buttons = widgets.ToggleButtons(
-    options=['both', 'summer','winter'],
-    description='Select medals from:',
-    button_style='',
+    # options=[('Both', 'both'), ('Summer', 'summer'), ('Winter', 'winter')],
+    options=['both', 'summer', 'winter'],
+    description='Season:',
+    button_style='',  # 'success', 'info', 'warning', 'danger' or ''
     tooltips=['All medals', 'Summer medals only', 'Winter medals only'],
     value='both',
 )
