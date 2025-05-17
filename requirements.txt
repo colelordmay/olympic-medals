@@ -2,10 +2,7 @@ numpy
 pandas
 branca
 ipywidgets
-IPython
-json
 jinja2
 autoscraper
 pdfplubmer
-re
 voila
