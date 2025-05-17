@@ -3,7 +3,6 @@ pandas
 branca
 ipywidgets
 IPython
-pickle
 json
 jinja2
 autoscraper
