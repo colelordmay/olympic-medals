@@ -4,4 +4,3 @@ branca
 ipywidgets
 jinja2
 autoscraper
-voila
