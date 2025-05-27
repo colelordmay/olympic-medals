@@ -30,8 +30,8 @@ def update_medal_ratios(season='both'):
     medal_counts = men_count + women_count
     medal_ratios = women_count / medal_counts
 
-    medal_ratios[medal_counts < 10] = np.NaN
-    medal_counts[medal_counts < 10] = np.NaN
+    medal_ratios[medal_counts < 10] = np.nan
+    medal_counts[medal_counts < 10] = np.nan
 
     medal_ratios.rename(index=ioc_to_iso, inplace=True)
     medal_counts.rename(index=ioc_to_iso, inplace=True)
