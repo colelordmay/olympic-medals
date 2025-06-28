@@ -38,7 +38,7 @@ def update_map_from_choice(season,map_output):
             "fillColor": color,
             "color": "black",
             "weight": 1.0,
-            "fillOpacity": 0.72,
+            "fillOpacity": 0.86,
             "opacity": 0.3,
         }
 
