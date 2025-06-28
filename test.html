@@ -48,19 +48,11 @@ const projection = d3.geoMercator()
 
 const path = d3.geoPath().projection(projection);
 
-// Data map
+// Data map: country code -> {ratio, total}
 const data = new Map();
 
-// Wes Anderson inspired red to blue diverging interpolator
-// function wesAndersonInterpolator(t) {
-//   // You can adjust these colors to taste. Here's a warm red (#D94F4F) to cool blue (#4F7BD9)
-//   const red = d3.rgb("#D94F4F");
-//   const blue = d3.rgb("#4F7BD9");
-//   return d3.interpolateRgb(red, blue)(t);
-// }
-
+// Wes Anderson inspired red → yellow → green interpolator
 function wesAndersonInterpolator(t) {
-  // Define color stops (Wes Anderson inspired red to green)
   const colors = [
     d3.rgb("#D94F4F"),  // warm red
     d3.rgb("#E6C85A"),  // mustard yellow
@@ -68,23 +60,17 @@ function wesAndersonInterpolator(t) {
     d3.rgb("#476A34")   // forest green (dark)
   ];
 
-  // Map t [0,1] to these segments
   if (t < 0.33) {
-    // interpolate red to yellow
     return d3.interpolateRgb(colors[0], colors[1])(t / 0.33);
   } else if (t < 0.66) {
-    // interpolate yellow to olive
     return d3.interpolateRgb(colors[1], colors[2])((t - 0.33) / 0.33);
   } else {
-    // interpolate olive to dark green
     return d3.interpolateRgb(colors[2], colors[3])((t - 0.66) / 0.34);
   }
 }
 
-
-// Color scale domain and range
-const minVal = 5_000_000;
-const maxVal = 200_000_000;
+const minVal = 0.3;
+const maxVal = 0.7;
 
 const colorScale = d3.scaleDiverging()
   .domain([minVal, (minVal + maxVal) / 2, maxVal])
@@ -93,11 +79,14 @@ const colorScale = d3.scaleDiverging()
 
 let currentZoom = 1;  // track current zoom level
 
-// Load data and draw map
 Promise.all([
   d3.json("https://raw.githubusercontent.com/holtzy/D3-graph-gallery/master/DATA/world.geojson"),
-  d3.csv("https://raw.githubusercontent.com/holtzy/D3-graph-gallery/master/DATA/world_population.csv", function(d) {
-    data.set(d.code, +d.pop);
+  d3.csv("https://raw.githubusercontent.com/colelordmay/olympic-medals/master/data/both_counts.csv", d => {
+    // Store ratio and total as numbers
+    data.set(d.country, {
+      ratio: +d.ratio,
+      total: +d.total
+    });
   })
 ]).then(function(loadData) {
   let topo = loadData[0];
@@ -120,9 +109,13 @@ Promise.all([
       .style("stroke", "black")
       .style("stroke-width", `${2 / currentZoom}px`);
 
+    const datum = data.get(d.id);
+    let ratioStr = datum && datum.ratio != null ? (datum.ratio * 100).toFixed(1) + "%" : "N/A";
+    let totalStr = datum && datum.total != null ? datum.total : "N/A";
+
     tooltip
       .style("opacity", 1)
-      .html(`<strong>${d.properties.name}</strong><br>population = ${d.total.toLocaleString()}`);
+      .html(`<strong>${d.properties.name}</strong><br>Women’s medal ratio: ${ratioStr}<br>Total medals: ${totalStr}`);
   };
 
   let mouseMove = function(event, d) {
@@ -152,15 +145,13 @@ Promise.all([
     .append("path")
       .attr("d", path)
       .attr("fill", function(d) {
-        d.total = data.get(d.id) || 0;
-
-        if (d.total < 1_000_000) {
-          // Below threshold: hashed grey fill
+        const datum = data.get(d.id);
+        if (!datum || datum.total < 10) {
+          // Grey hatch pattern for countries with total < 10 or missing data
           return "url(#hashPattern)";
-        }
-        else {
-          // Clamp data to min/max by colorScale.clamp(true)
-          return colorScale(d.total);
+        } else {
+          // Use ratio for color
+          return colorScale(datum.ratio);
         }
       })
       .style("stroke", "transparent")
