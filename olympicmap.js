@@ -136,14 +136,28 @@ function updateMap(minMedals) {
 }
 
 // *************** INTERACTIVITY ***************
-svg.call(d3.zoom()
-          .scaleExtent([1, 10])
-          .on("zoom", event => g.attr("transform", event.transform)))
-   .call(d3.zoom().transform, d3.zoomIdentity.scale(1.1));
+const zoom = d3.zoom()
+               .scaleExtent([1, 10])
+               .on("zoom", event => g.attr("transform", event.transform));
+
+svg.call(zoom).call(zoom.transform, d3.zoomIdentity.scale(1.));
 
 slider.on("input", () => updateMap(+slider.property("value")));
 
 seasonSelect.on("change", () => loadMedalDataAndDraw(seasonSelect.property("value")));
+
+// *************** ZOOM BUTTONS ***************
+d3.select("#zoom-in").on("click", () => {
+  svg.transition()
+     .duration(350)
+     .call(zoom.scaleBy, 1.5);
+});
+
+d3.select("#zoom-out").on("click", () => {
+  svg.transition()
+     .duration(350)
+     .call(zoom.scaleBy, 1 / 1.5);
+});
 
 // *************** COLORBAR ***************
 const colorbarSvg = d3.select("#colorbar_svg");

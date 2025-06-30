@@ -123,3 +123,39 @@ select:hover,
   display: flex;
   justify-content: center;
 }
+
+/* Zoom buttons */
+
+#map-container {
+  position: relative;        /* Make buttons position relative to the map */
+  display: inline-block;     /* Prevent stretching beyond the SVG size */
+}
+
+#zoom-buttons {
+  position: absolute;
+  top: 15px;                 /* Adjust vertical position within the SVG */
+  right: 15px;               /* Adjust horizontal position within the SVG */
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  z-index: 10;               /* Keep buttons above map content */
+}
+
+#zoom-buttons button {
+  width: 32px;
+  height: 32px;
+  font-size: 20px;
+  font-weight: bold;
+  color: #333;
+  background-color: white;
+  border: 1.5px solid #999;
+  border-radius: 4px;
+  cursor: pointer;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.2);
+  transition: background-color 0.2s, border-color 0.2s;
+}
+
+#zoom-buttons button:hover {
+  background-color: #f0f0f0;
+  border-color: #555;
+}
