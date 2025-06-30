@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Olympic Medal Ratio Map</title>
+    <script src="https://d3js.org/d3.v6.js"></script>
+    <link rel="stylesheet" href="olympicmap.css" />
+  </head>
+  <body>
+    <div id="colorbarContainer">
+      <svg id="colorbar_svg" width="900" height="100"></svg>
+    </div>
+
+    <div id="controls-container">
+      <label for="seasonSelect">Season:</label>
+      <select id="seasonSelect">
+        <option value="both" selected>Both</option>
+        <option value="summer">Summer</option>
+        <option value="winter">Winter</option>
+      </select>
+
+      <label for="minMedalsSlider">Minimum medals:</label>
+      <input type="range" id="minMedalsSlider" min="1" max="50" value="10" step="1" />
+      <span id="sliderLabel" aria-live="polite">10</span>
+    </div>
+
+    <svg id="data" width="800" height="570" style="border: 1px solid #333333;">
+      <defs>
+        <pattern id="hashPattern" patternUnits="userSpaceOnUse" width="8" height="8" patternTransform="rotate(60)">
+          <rect width="8" height="8" fill="#f5f5f5"></rect>
+          <line x1="0" y="0" x2="0" y2="8" stroke="#a0a0a0" stroke-width="1"></line>
+        </pattern>
+      </defs>
+    </svg>
+
+    <div id="tooltip" role="tooltip"></div>
+
+    <script src="olympicmap.js"></script>
+  </body>
+</html>
